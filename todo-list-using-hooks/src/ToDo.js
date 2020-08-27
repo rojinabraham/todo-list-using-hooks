@@ -1,4 +1,5 @@
 import React from "react";
+import useToggle from "./hooks/useToggle";
 import {
   ListItem,
   ListItemText,
@@ -8,31 +9,44 @@ import {
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-function ToDo({ task, completed, removeTodo, id, toggleToDo }) {
+import EditToDoForm from "./EditToDoForm";
+
+function ToDo({ editToDo, task, completed, removeTodo, id, toggleToDo }) {
+  const [isEditing, toggle] = useToggle(false);
+
   const runToggle = () => {
     toggleToDo(id);
-    console.log(id);
   };
   const runRemove = () => {
     removeTodo(id);
-    console.log(id);
   };
   return (
     <ListItem>
-      <Checkbox onClick={runToggle} tabIndex={-1} checked={completed} />
-      <ListItemText
-        style={{ textDecoration: completed ? "line-through" : "none" }}
-      >
-        {task}
-      </ListItemText>
-      <ListItemSecondaryAction>
-        <IconButton onClick={runRemove} aria-label="Delete">
-          <DeleteIcon></DeleteIcon>
-        </IconButton>
-        <IconButton aria-label="Edit">
-          <EditIcon></EditIcon>
-        </IconButton>
-      </ListItemSecondaryAction>
+      {isEditing ? (
+        <EditToDoForm
+          task={task}
+          id={id}
+          editToDo={editToDo}
+          toggle={toggle}
+        ></EditToDoForm>
+      ) : (
+        <>
+          <Checkbox onClick={runToggle} tabIndex={-1} checked={completed} />
+          <ListItemText
+            style={{ textDecoration: completed ? "line-through" : "none" }}
+          >
+            {task}
+          </ListItemText>
+          <ListItemSecondaryAction>
+            <IconButton onClick={runRemove} aria-label="Delete">
+              <DeleteIcon></DeleteIcon>
+            </IconButton>
+            <IconButton onClick={toggle} aria-label="Edit">
+              <EditIcon></EditIcon>
+            </IconButton>
+          </ListItemSecondaryAction>
+        </>
+      )}
     </ListItem>
   );
 }
