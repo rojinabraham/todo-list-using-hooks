@@ -21,7 +21,7 @@ function ToDo({ editToDo, task, completed, removeTodo, id, toggleToDo }) {
     removeTodo(id);
   };
   return (
-    <ListItem>
+    <ListItem style={{ height: "64px" }}>
       {isEditing ? (
         <EditToDoForm
           task={task}
