@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import ToDoList from "./ToDoList";
 import ToDoForm from "./ToDoForm";
 import Typography from "@material-ui/core/Typography";
@@ -6,11 +6,10 @@ import Paper from "@material-ui/core/Paper";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
-import uuid from "uuid/dist/v4";
-import { useEffect } from "react";
+import useTodoState from "./hooks/useTodoState";
 
 function ToDoApp() {
-  const initialToDos = JSON.parse(window.localStorage.getItem("todos")) || [
+  const initialToDos = [
     {
       id: 1,
       task: "Clean",
@@ -23,50 +22,14 @@ function ToDoApp() {
     },
     {
       id: 3,
-      task: "sleep",
+      task: "pet a monkey",
       completed: false,
     },
   ];
-  //   const initialToDos = [
-  //     {
-  //       id: 1,
-  //       task: "Clean",
-  //       completed: false,
-  //     },
-  //     {
-  //       id: 2,
-  //       task: "cook",
-  //       completed: true,
-  //     },
-  //     {
-  //       id: 3,
-  //       task: "sleep",
-  //       completed: false,
-  //     },
-  //   ];
-  const [todos, setTodos] = useState(initialToDos);
-  const addToDo = (newToDoText) => {
-    setTodos([...todos, { id: uuid(), task: newToDoText, completed: false }]);
-  };
-  const removeTodo = (todoId) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== todoId);
-    setTodos(updatedTodos);
-  };
-  const toggleToDo = (todoId) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-  };
-  const editToDo = (todoId, newTask) => {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === todoId ? { ...todo, task: newTask } : todo
-    );
-    setTodos(updatedTodos);
-  };
-  useEffect(() => {
-    window.localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+  const { todos, addToDo, toggleToDo, editToDo, removeTodo } = useTodoState(
+    initialToDos
+  );
+
   return (
     <Paper
       style={{
